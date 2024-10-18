@@ -1,8 +1,14 @@
-import { Body, Controller, Get, Header, HttpCode, HttpRedirectResponse, Param, Post, Query, Redirect, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpRedirectResponse, Inject, Optional, Param, Post, Query, Redirect, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { UserService } from './user.service';
 
 @Controller('/api/user')
 export class UserController {
+
+    @Inject()
+    private userService: UserService;
+
+    constructor(private service: UserService) {}
 
     @Post("/post/sample")
     post() : string {
@@ -74,6 +80,12 @@ export class UserController {
             last_name:last_name
         });
     }
-    
+
+
+    @Get("/helloDepends")
+    async sayHelloDepends(@Query("name") name:string ): Promise<string>{
+        return this.userService.sayHello(name);
+        // return "test";
+    }
 
 }
